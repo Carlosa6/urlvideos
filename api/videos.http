@@ -3,13 +3,20 @@
 GET {{api}}
 
 ###
-GET {{api}}/343
+GET {{api}}/5f911385dbf5870c549f8497
 
 ###
 DELETE  {{api}}/34
 
-###
+### CREATE  VIDEO
 POST {{api}}
+Content-Type: application/json
+
+{
+    "url":"https://www.youtube.com/watch?v=B_igBe1RikI",
+    "title":"[MERN] | Make your own Social Networking App | Eduonix",
+    "description":"Del canal de Youtube Eduonix Learning Solutions"
+}
 
 ###
 PUT {{api}}/4

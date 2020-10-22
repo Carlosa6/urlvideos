@@ -1,11 +1,40 @@
 import { RequestHandler } from 'express'
+import Video from './Video'
 
-export const createVideo:RequestHandler = (req, res) => res.json('creando videos')
+export const createVideo: RequestHandler = async (req, res) => {
+  //validando que la url no exista
+  const videoFound = await Video.findOne({ url: req.body.url })
+  if(videoFound)
+    return res.status(301).json({ message: 'The URL already exists' })
 
-export const getVideos:RequestHandler = (req, res) => res.json('getting videos')
+  const video = new Video(req.body);
+  const videoSaved = await video.save()
+  res.json(videoSaved)
+}
 
-export const getVideo:RequestHandler = (req, res) => res.json('getting video')
+export const getVideos: RequestHandler = async (req, res) => {
+  try{
+    const videos = await Video.find();
+    return res.json(videos)
+  }catch(error){
+    res.json(error)
+  }
+}
 
-export const deleteVideo:RequestHandler = (req, res) => res.json('emilimando videos')
+export const getVideo: RequestHandler = async (req, res) => {
+  const videoFound = await Video.findById(req.params.id)
+  if (!videoFound) return res.status(204).json()
+  return res.json(videoFound)
+}
 
-export const updateVideo:RequestHandler = (req, res) => res.json('actualizando videos')
+export const deleteVideo: RequestHandler = async (req, res) => {
+  const videoFound = await Video.findByIdAndDelete(req.params.id)
+  if (!videoFound) return res.status(204).json()
+  return res.json(videoFound)
+}
+
+export const updateVideo: RequestHandler = async (req, res) => {
+  const videoUpdated = await Video.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  if (!videoUpdated) return res.status(204).json();
+   res.json(videoUpdated)
+}
